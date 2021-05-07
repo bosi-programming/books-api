@@ -3,14 +3,16 @@
  * @module models/book
  */
 import { Model, model, Document, Schema } from 'mongoose';
-import axios from 'axios';
 
 export interface IBook {
   _id?: string;
+  title: string;
+  author: string;
+  description: string;
 }
 
 interface BookDocument extends Document {
-  name: string;
+  title: string;
   author: string;
   description: string;
 }
@@ -18,7 +20,7 @@ interface BookDocument extends Document {
 interface BookModel extends Model<BookDocument> {}
 
 const bookSchema = new Schema({
-  name: {
+  title: {
     type: String,
     required: true,
   },
@@ -73,13 +75,14 @@ export class Book {
   /**
    * Searches for a book on the Google API
    */
-  static async searchBookByTitle(name: string, page: number = 1) {
-    const googleBooks: any = await axios(
-      `https://www.googleapis.com/books/v1/volumes?q=inname:${name}&startIndex=${(page - 1) * 10}`,
-    );
-    const appBooks = await this.model
-      .find({ name: new RegExp(name, 'i') }, null, { limit: 10, skip: (page - 1) * 10 })
-      .exec();
-    return [...googleBooks.items, ...appBooks];
+  static async list(page: number = 1) {
+    return await this.model.find({}, null, { limit: 10, skip: (page - 1) * 10 }).exec();
+  }
+
+  /**
+   * Searches for a book on the Google API
+   */
+  static async searchBookByTitle(title: string, page: number = 1) {
+    return await this.model.find({ title: new RegExp(title, 'i') }, null, { limit: 10, skip: (page - 1) * 10 }).exec();
   }
 }
