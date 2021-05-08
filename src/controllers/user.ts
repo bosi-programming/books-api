@@ -22,7 +22,7 @@ userRouter.get('/api/users', async (req: Request, res: Response) => {
   const { user } = req.body;
 
   if (user) {
-    res.status(200).json({ logged: true, message: ' User logged in' });
+    res.status(200).json({ logged: true, message: ' User logged in', user: user.userName });
   } else {
     res.status(200).json({ logged: false, message: 'User not logged or with old token' });
   }

@@ -26,7 +26,7 @@ const bookSchema = new Schema({
   },
   author: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
@@ -51,7 +51,7 @@ export class Book {
    *
    * @param _id - string
    */
-  static async findByById(_id: string): Promise<BookDocument | null> {
+  static async findById(_id: string): Promise<BookDocument | null> {
     return await this.model.findOne({ _id }).exec();
   }
 
